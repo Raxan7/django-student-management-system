@@ -8,7 +8,9 @@ cryptography==42.0.5
 Django==4.2.1
 django-anymail==10.2
 django-crispy-forms==2.0
+gunicorn==21.2.0
 idna==3.4
+packaging==24.0
 phonenumbers==8.13.23
 Pillow==10.1.0
 pycparser==2.21
