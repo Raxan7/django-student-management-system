@@ -76,8 +76,12 @@ urlpatterns = [
     path('staff_feedback_save/', StaffViews.staff_feedback_save, name="staff_feedback_save"),
     path('staff_profile/', StaffViews.staff_profile, name="staff_profile"),
     path('staff_profile_update/', StaffViews.staff_profile_update, name="staff_profile_update"),
-    path('staff_add_result/', StaffViews.staff_add_result, name="staff_add_result"),
-    path('staff_add_result_save/', StaffViews.staff_add_result_save, name="staff_add_result_save"),
+    path('staff_add_result_test1/', StaffViews.staff_add_result_test1, name="staff_add_result_test1"),
+    path('staff_add_result_test1_save/', StaffViews.staff_add_result_test1_save, name="staff_add_result_test1_save"),
+    path('staff_add_result_test2/', StaffViews.staff_add_result_test2, name="staff_add_result_test2"),
+    path('staff_add_result_test2_save/', StaffViews.staff_add_result_test2_save, name="staff_add_result_test2_save"),
+    path('staff_add_result_UE/', StaffViews.staff_add_result_UE, name="staff_add_result_UE"),
+    path('staff_add_result_UE_save/', StaffViews.staff_add_result_UE_save, name="staff_add_result_UE_save"),
 
     # URSL for Student
     path('student_home/', StudentViews.student_home, name="student_home"),
@@ -90,4 +94,7 @@ urlpatterns = [
     path('student_profile/', StudentViews.student_profile, name="student_profile"),
     path('student_profile_update/', StudentViews.student_profile_update, name="student_profile_update"),
     path('student_view_result/', StudentViews.student_view_result, name="student_view_result"),
+
+    path('student_view_predictions/', StudentViews.student_view_predictions, name="student_view_predictions"),
+    path('student_learn_more/', StudentViews.student_learn_more, name="student_learn_more"),
 ]

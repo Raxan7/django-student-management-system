@@ -5,7 +5,7 @@
       <a href="{% url 'student_home' %}" class="brand-link">
         <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8">
-        <span class="brand-text font-weight-light">Open university</span>
+        <span class="brand-text font-weight-light">University of Dodoma</span>
       </a>
 
       <!-- Sidebar -->
@@ -49,6 +49,17 @@
             </li>
 
             <li class="nav-item">
+              {% url 'student_view_predictions' as student_view_predictions %}
+              <a href="{{ student_view_predictions }}" class="nav-link {% if request.path == student_view_predictions %} active {% endif %}">
+                <i class="nav-icon fas fa-tasks"></i>
+                <p>
+                  View Predictions
+                  {% comment %} <span class="right badge badge-danger">New</span> {% endcomment %}
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
               {% url 'student_view_result' as student_view_result %}
               <a href="{{ student_view_result }}" class="nav-link {% if request.path == student_view_result %} active {% endif %}">
                 <i class="nav-icon fas fa-tasks"></i>
@@ -76,6 +87,17 @@
                 <i class="nav-icon fas fa-comments"></i>
                 <p>
                   Send Feedback
+                  {% comment %} <span class="right badge badge-danger">New</span> {% endcomment %}
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'student_feedback' as student_feedback %}
+              <a href="{{ student_feedback }}" class="nav-link {% if request.path == student_feedback %} active {% endif %}">
+                <i class="nav-icon fas fa-comments"></i>
+                <p>
+                  More About Yourself
                   {% comment %} <span class="right badge badge-danger">New</span> {% endcomment %}
                 </p>
               </a>

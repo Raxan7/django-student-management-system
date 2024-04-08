@@ -1,7 +1,7 @@
 {% extends 'student_template/base_template.html' %}
 
 {% block page_title %}
-    Result
+    Predictions
 {% endblock page_title %}
 
 {% block main_content %}
@@ -17,8 +17,32 @@
                 <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Result</h3>
+                            <h3 class="card-title">Predictions</h3>
                         </div>
+
+                        {% if messages %}
+                        <div class="form-group">
+                        <div class="col-12">
+                            {% for message in messages %}
+                            {% if message.tags == "error" %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% elif message.tags == "success" %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        </div>
+                        {% endif %}
 
                         <div class="card-body">
                            <div class="table-responsive">
@@ -40,12 +64,12 @@
                                         <td>{{ row.subject_id.subject_name }}</td>
                                         <td>{{ row.test1_marks }}</td>
                                         <td>{{ row.test2_marks }}</td>
-                                        <td>{{ row.UE_marks }}</td>
+                                        <td>{{ results }}</td>
                                         <td>
                                             {% if total >= 40 %}
-                                                <span class="alert alert-success">Pass</span>
+                                                <span class="alert alert-success">Keep Working Hard</span>
                                             {% else %}
-                                                <span class="alert alert-danger">Fail</span>
+                                                <span class="alert alert-danger">Danger of Failing</span>
                                             {% endif %}
                                         </td>
                                     </tr>

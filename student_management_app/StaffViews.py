@@ -311,24 +311,24 @@ def staff_profile_update(request):
             return redirect('staff_profile')
 
 
+# Test 1 Functions
 
-def staff_add_result(request):
+def staff_add_result_test1(request):
     subjects = Subjects.objects.filter(staff_id=request.user.id)
     session_years = SessionYearModel.objects.all()
     context = {
         "subjects": subjects,
         "session_years": session_years,
     }
-    return render(request, "staff_template/add_result_template.html", context)
+    return render(request, "staff_template/add_result_test1_template.html", context)
 
 
-def staff_add_result_save(request):
+def staff_add_result_test1_save(request):
     if request.method != "POST":
         messages.error(request, "Invalid Method")
-        return redirect('staff_add_result')
+        return redirect('staff_add_result_test1')
     else:
         student_admin_id = request.POST.get('student_list')
-        assignment_marks = request.POST.get('assignment_marks')
         exam_marks = request.POST.get('exam_marks')
         subject_id = request.POST.get('subject')
 
@@ -340,16 +340,101 @@ def staff_add_result_save(request):
             check_exist = StudentResult.objects.filter(subject_id=subject_obj, student_id=student_obj).exists()
             if check_exist:
                 result = StudentResult.objects.get(subject_id=subject_obj, student_id=student_obj)
-                result.subject_assignment_marks = assignment_marks
-                result.subject_exam_marks = exam_marks
+                result.test1_marks = exam_marks
                 result.save()
                 messages.success(request, "Result Updated Successfully!")
-                return redirect('staff_add_result')
+                return redirect('staff_add_result_test1')
             else:
-                result = StudentResult(student_id=student_obj, subject_id=subject_obj, subject_exam_marks=exam_marks, subject_assignment_marks=assignment_marks)
+                result = StudentResult(student_id=student_obj, subject_id=subject_obj, test1_marks=exam_marks)
                 result.save()
                 messages.success(request, "Result Added Successfully!")
-                return redirect('staff_add_result')
+                return redirect('staff_add_result_test1')
         except:
             messages.error(request, "Failed to Add Result!")
-            return redirect('staff_add_result')
+            return redirect('staff_add_result_test1')
+
+
+# Test 2 Functions
+
+def staff_add_result_test2(request):
+    subjects = Subjects.objects.filter(staff_id=request.user.id)
+    session_years = SessionYearModel.objects.all()
+    context = {
+        "subjects": subjects,
+        "session_years": session_years,
+    }
+    return render(request, "staff_template/add_result_test2_template.html", context)
+
+
+def staff_add_result_test2_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect('staff_add_result_test2')
+    else:
+        student_admin_id = request.POST.get('student_list')
+        exam_marks = request.POST.get('exam_marks')
+        subject_id = request.POST.get('subject')
+
+        student_obj = Students.objects.get(admin=student_admin_id)
+        subject_obj = Subjects.objects.get(id=subject_id)
+
+        try:
+            # Check if Students Result Already Exists or not
+            check_exist = StudentResult.objects.filter(subject_id=subject_obj, student_id=student_obj).exists()
+            if check_exist:
+                result = StudentResult.objects.get(subject_id=subject_obj, student_id=student_obj)
+                result.test2_marks = exam_marks
+                result.save()
+                messages.success(request, "Result Updated Successfully!")
+                return redirect('staff_add_result_test2')
+            else:
+                result = StudentResult(student_id=student_obj, subject_id=subject_obj, test2_marks=exam_marks)
+                result.save()
+                messages.success(request, "Result Added Successfully!")
+                return redirect('staff_add_result_test2')
+        except:
+            messages.error(request, "Failed to Add Result!")
+            return redirect('staff_add_result_test2')
+        
+
+# UE Functions
+
+def staff_add_result_UE(request):
+    subjects = Subjects.objects.filter(staff_id=request.user.id)
+    session_years = SessionYearModel.objects.all()
+    context = {
+        "subjects": subjects,
+        "session_years": session_years,
+    }
+    return render(request, "staff_template/add_result_UE_template.html", context)
+
+
+def staff_add_result_UE_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method")
+        return redirect('staff_add_result_UE')
+    else:
+        student_admin_id = request.POST.get('student_list')
+        exam_marks = request.POST.get('exam_marks')
+        subject_id = request.POST.get('subject')
+
+        student_obj = Students.objects.get(admin=student_admin_id)
+        subject_obj = Subjects.objects.get(id=subject_id)
+
+        try:
+            # Check if Students Result Already Exists or not
+            check_exist = StudentResult.objects.filter(subject_id=subject_obj, student_id=student_obj).exists()
+            if check_exist:
+                result = StudentResult.objects.get(subject_id=subject_obj, student_id=student_obj)
+                result.UE_marks = exam_marks
+                result.save()
+                messages.success(request, "Result Updated Successfully!")
+                return redirect('staff_add_result_UE')
+            else:
+                result = StudentResult(student_id=student_obj, subject_id=subject_obj, UE_marks=exam_marks)
+                result.save()
+                messages.success(request, "Result Added Successfully!")
+                return redirect('staff_add_result_UE')
+        except:
+            messages.error(request, "Failed to Add Result!")
+            return redirect('staff_add_result_UE')

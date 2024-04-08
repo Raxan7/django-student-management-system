@@ -148,7 +148,7 @@ Then Add Email, Username and Password
 Email: admin@gmail.com
 Password: admin
 
-*For Staff*
+*For Supervisor*
 Email: staff@gmail.com
 Password: staff
 

@@ -3,9 +3,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage #To upload Profile Picture
 from django.urls import reverse
+from itertools import chain
 import datetime # To Parse input DateTime into Python Date Time Object
 
-from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, Attendance, AttendanceReport, LeaveReportStudent, FeedBackStudent, StudentResult
+from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, Attendance, AttendanceReport, LeaveReportStudent, FeedBackStudent, StudentResult, StudentPerformance
+from student_management_app.ml_model import load_model
 
 
 def student_home(request):
@@ -189,12 +191,134 @@ def student_profile_update(request):
 def student_view_result(request):
     student = Students.objects.get(admin=request.user.id)
     student_result = StudentResult.objects.filter(student_id=student.id)
+
+    total = student_result[0].test1_marks + student_result[0].test2_marks + student_result[0].UE_marks
+    print(total)
+    
+
     context = {
         "student_result": student_result,
+        "total": total,
     }
     return render(request, "student_template/student_view_result.html", context)
 
 
+# AI
+def student_view_predictions(request):
+    student = Students.objects.get(admin=request.user.id)
+    student_result = StudentResult.objects.filter(student_id=student.id)
+    student_data = StudentPerformance.objects.get(student=student)
+    print(student_result)
+    test1, test2 = student_result.first().test1_marks, student_result.first().test2_marks
+    dataset = [
+            student_data.age, student_data.medu, student_data.fedu, student_data.traveltime, student_data.studytime,
+              student_data.failures, student_data.famrel, student_data.freetime, student_data.goout, 
+              student_data.dalc, student_data.walc, student_data.health, student_data.absences, 
+              test1, test2
+        ]
+    results = load_model().predict([dataset])
+    results = round(results[0] / 20 * 60, 2)
+
+    total = test1 + test2 + results
+
+    # Add messages to indicate the prediction result
+    if total >= 40:
+        messages.success(request, f"Congratulations! Your predicted total score is {total}. You are likely to pass in your exams!")
+    else:
+        messages.error(request, f"Sorry! Your predicted total score is {total}. You are in danger of failing, work harder!.")
+
+    context = {
+        "student_result": student_result,
+        "results": results,
+        "total": total,
+    }
+    return render(request, "student_template/student_view_predictions.html", context)
 
 
+def student_learn_more(request):
+    user = CustomUser.objects.get(id=request.user.id)
+    student = Students.objects.get(admin=user)
 
+    if request.method == 'POST':
+        # If the request method is POST, it means the form is submitted
+        # Get the data from the request
+        age = request.POST.get('age')
+        address = request.POST.get('address_choices')
+        medu = request.POST.get('medu')
+        fedu = request.POST.get('fedu')
+        traveltime = request.POST.get('traveltime')
+        studytime = request.POST.get('studytime')
+        failures = request.POST.get('failures')
+        famrel = request.POST.get('famrel')
+        freetime = request.POST.get('freetime')
+        goout = request.POST.get('goout')
+        dalc = request.POST.get('dalc')
+        walc = request.POST.get('walc')
+        health = request.POST.get('health')
+        absences = request.POST.get('absences')
+
+        try:
+            student_performance = StudentPerformance.objects.get(student=student)
+            # Update the fields
+            student_performance.age = age
+            student_performance.address = address
+            student_performance.medu = medu
+            student_performance.fedu = fedu
+            # Update other fields similarly
+            student_performance.traveltime = traveltime
+            student_performance.studytime = studytime
+            student_performance.failures = failures
+            student_performance.famrel = famrel
+            student_performance.freetime = freetime
+            student_performance.goout = goout
+            student_performance.dalc = dalc
+            student_performance.walc = walc
+            student_performance.health = health
+            student_performance.absences = absences
+            student_performance.save()
+
+        except StudentPerformance.DoesNotExist:
+            # If the instance doesn't exist, create a new one
+            StudentPerformance.objects.create(
+                student=student,
+                age=age,
+                address=address,
+                medu=medu,
+                fedu=fedu,
+                # Add other fields similarly
+                traveltime=traveltime,
+                studytime=studytime,
+                failures=failures,
+                famrel=famrel,
+                freetime=freetime,
+                goout=goout,
+                dalc=dalc,
+                walc=walc,
+                health=health,
+                absences=absences,
+            )
+
+        # Redirect to the same page after form submission to avoid duplicate submissions
+        return HttpResponseRedirect(reverse('student_learn_more'))
+
+    else:
+        # If the request method is GET, render the form
+        # Fetching choices for select dropdowns from the model itself
+        address_choices = StudentPerformance.ADDRESS_CHOICES
+        edu_choices = StudentPerformance.EDU_CHOICES
+        traveltime_choices = StudentPerformance.TRAVEL_TIME_CHOICES
+        studytime_choices = StudentPerformance.STUDY_TIME_CHOICES
+        failure_choices = StudentPerformance.FAILURE_CHOICES
+        health_choices = StudentPerformance.HEALTH_CHOICES
+
+        context={
+            "user": user,
+            "student": student,
+            "address_choices": address_choices,
+            "edu_choices": edu_choices,
+            "traveltime_choices": traveltime_choices,
+            "studytime_choices": studytime_choices,
+            "failure_choices": failure_choices,
+            "health_choices": health_choices,
+        }
+        return render(request, 'student_template/student_learn_more.html', context)

@@ -161,11 +161,99 @@ class StudentResult(models.Model):
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
     subject_id = models.ForeignKey(Subjects, on_delete=models.CASCADE)
-    subject_exam_marks = models.FloatField(default=0)
-    subject_assignment_marks = models.FloatField(default=0)
+    test1_marks = models.FloatField(default=0, blank=True, null=True)
+    test2_marks = models.FloatField(default=0, blank=True, null=True)
+    UE_marks = models.FloatField(default=0, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
+
+
+class StudentPerformance(models.Model):
+    SEX_CHOICES = (
+        ('F', 'Female'),
+        ('M', 'Male'),
+    )
+    ADDRESS_CHOICES = (
+        ('U', 'Urban'),
+        ('R', 'Rural'),
+    )
+    FAMSIZE_CHOICES = (
+        ('LE3', 'Less or equal to 3'),
+        ('GT3', 'Greater than 3'),
+    )
+    PSTATUS_CHOICES = (
+        ('T', 'Living together'),
+        ('A', 'Apart'),
+    )
+    EDU_CHOICES = (
+        (0, 'None'),
+        (1, 'Primary education (4th grade)'),
+        (2, '5th to 9th grade'),
+        (3, 'Secondary education'),
+        (4, 'Higher education'),
+    )
+    JOB_CHOICES = (
+        ('teacher', 'Teacher'),
+        ('health', 'Health care related'),
+        ('services', 'Civil services'),
+        ('at_home', 'At home'),
+        ('other', 'Other'),
+    )
+    REASON_CHOICES = (
+        ('home', 'Close to home'),
+        ('reputation', 'School reputation'),
+        ('course', 'Course preference'),
+        ('other', 'Other'),
+    )
+    GUARDIAN_CHOICES = (
+        ('mother', 'Mother'),
+        ('father', 'Father'),
+        ('other', 'Other'),
+    )
+    YES_NO_CHOICES = (
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    )
+    TRAVEL_TIME_CHOICES = [(i, f'{i} hours') for i in range(1, 5)]
+    STUDY_TIME_CHOICES = [(i, f'{i} hours') for i in range(1, 11)]
+    FAILURE_CHOICES = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4 or more'),
+    )
+    GRADE_CHOICES = [(i, str(i)) for i in range(0, 21)]
+    HEALTH_CHOICES = (
+        (1, 'Very bad'),
+        (2, 'Bad'),
+        (3, 'Normal'),
+        (4, 'Good'),
+        (5, 'Very good'),
+    )
+
+    objects = models.Manager()
+    student = models.ForeignKey(Students, on_delete=models.CASCADE, related_name='student')
+    age = models.IntegerField(default=18, blank=True, null=True)
+    address = models.CharField(max_length=1, choices=ADDRESS_CHOICES, default='Unspecified', blank=True, null=True)
+    medu = models.IntegerField(choices=EDU_CHOICES, default=0, blank=True, null=True)
+    fedu = models.IntegerField(choices=EDU_CHOICES, default=0, blank=True, null=True)
+    traveltime = models.IntegerField(choices=TRAVEL_TIME_CHOICES, default=0, blank=True, null=True)
+    studytime = models.IntegerField(choices=STUDY_TIME_CHOICES, default=0, blank=True, null=True)
+    failures = models.IntegerField(choices=FAILURE_CHOICES, default=0, blank=True, null=True)
+    famrel = models.IntegerField(default=0, blank=True, null=True)
+    freetime = models.IntegerField(default=0, blank=True, null=True)
+    goout = models.IntegerField(default=0, blank=True, null=True)
+    dalc = models.IntegerField(default=0, blank=True, null=True)
+    walc = models.IntegerField(default=0, blank=True, null=True)
+    health = models.IntegerField(choices=HEALTH_CHOICES, default=0, blank=True, null=True)
+    absences = models.IntegerField(default=0, blank=True, null=True)
+    g1 = models.IntegerField(choices=GRADE_CHOICES, verbose_name='First period grade', default=0)
+    g2 = models.IntegerField(choices=GRADE_CHOICES, verbose_name='Second period grade', default=0)
+
+    def __str__(self):
+        return f"Data for a {self.age}"
+
 
 
 #Creating Django Signals
