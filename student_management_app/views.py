@@ -8,22 +8,27 @@ from student_management_app.EmailBackEnd import EmailBackEnd
 
 
 def home(request):
+    print("home view here")
     return render(request, 'index.html')
 
 
 def loginPage(request):
+    print("login view here")
     return render(request, 'login.html')
 
 
 
 def doLogin(request):
+    print("doLogin view here")
     if request.method != "POST":
         return HttpResponse("<h2>Method Not Allowed</h2>")
     else:
+        print("Hi")
         user = EmailBackEnd.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
         if user != None:
             login(request, user)
             user_type = user.user_type
+            print(user_type)
             #return HttpResponse("Email: "+request.POST.get('email')+ " Password: "+request.POST.get('password'))
             if user_type == '1':
                 return redirect('admin_home')
@@ -35,12 +40,16 @@ def doLogin(request):
             elif user_type == '3':
                 # return HttpResponse("Student Login")
                 return redirect('student_home')
+            
+            elif user_type == '4':
+                # return HttpResponse("Parent Login")
+                return redirect('parent_home')
             else:
                 messages.error(request, "Invalid Login!")
                 return redirect('login')
         else:
             messages.error(request, "Invalid Login Credentials!")
-            #return HttpResponseRedirect("/")
+            # return HttpResponseRedirect("/")
             return redirect('login')
 
 
@@ -55,6 +64,7 @@ def get_user_details(request):
 
 def logout_user(request):
     logout(request)
+    print("logout view here")
     return HttpResponseRedirect('/')
 
 

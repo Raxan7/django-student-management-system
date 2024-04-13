@@ -15,7 +15,7 @@ class SessionYearModel(models.Model):
 
 # Overriding the Default Django Auth User and adding One More Field (user_type)
 class CustomUser(AbstractUser):
-    user_type_data = ((1, "HOD"), (2, "Staff"), (3, "Student"))
+    user_type_data = ((1, "HOD"), (2, "Staff"), (3, "Student"), (4, "Parent"))
     user_type = models.CharField(default=1, choices=user_type_data, max_length=10)
 
 
@@ -69,6 +69,16 @@ class Students(models.Model):
     address = models.TextField()
     course_id = models.ForeignKey(Courses, on_delete=models.DO_NOTHING, default=1)
     session_year_id = models.ForeignKey(SessionYearModel, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+
+class Parents(models.Model):
+    id = models.AutoField(primary_key=True)
+    admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    address = models.TextField()
+    child = models.OneToOneField(Students, on_delete=models.CASCADE, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -272,6 +282,8 @@ def create_user_profile(sender, instance, created, **kwargs):
             Staffs.objects.create(admin=instance)
         if instance.user_type == 3:
             Students.objects.create(admin=instance, course_id=Courses.objects.get(id=1), session_year_id=SessionYearModel.objects.get(id=1), address="", profile_pic="", gender="")
+        if instance.user_type == 4:
+            Parents.objects.create(admin=instance, child_id=Students.objects.get(id=1).id, address="")
     
 
 @receiver(post_save, sender=CustomUser)
@@ -282,6 +294,5 @@ def save_user_profile(sender, instance, **kwargs):
         instance.staffs.save()
     if instance.user_type == 3:
         instance.students.save()
-    
-
-
+    if instance.user_type == 4:
+        instance.parents.save() 
