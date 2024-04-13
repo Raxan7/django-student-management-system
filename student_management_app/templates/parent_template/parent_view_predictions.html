@@ -1,0 +1,92 @@
+{% extends 'parent_template/base_template.html' %}
+
+{% block page_title %}
+    Predictions
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Predictions</h3>
+                        </div>
+
+                        {% if messages %}
+                        <div class="form-group">
+                        <div class="col-12">
+                            {% for message in messages %}
+                            {% if message.tags == "error" %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% elif message.tags == "success" %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="card-body">
+                           <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th>#ID</th>
+                                        <th>Subject</th>
+                                        <th>Test 1 Marks</th>
+                                        <th>Test 2 Marks</th>
+                                        <th>UE Marks</th>
+                                        <th>status</th>
+                                    </tr>
+                                    </thead>
+                                    
+                                    {% for row in student_result %}
+                                    <tr>
+                                        <td>{{ row.id }}</td>
+                                        <td>{{ row.subject_id.subject_name }}</td>
+                                        <td>{{ row.test1_marks }}</td>
+                                        <td>{{ row.test2_marks }}</td>
+                                        <td>{{ results }}</td>
+                                        <td>
+                                            {% if total >= 40 %}
+                                                <span class="alert alert-success">Keep Working Hard</span>
+                                            {% else %}
+                                                <span class="alert alert-danger">Danger of Failing</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}
