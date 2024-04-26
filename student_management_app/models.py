@@ -174,9 +174,28 @@ class StudentResult(models.Model):
     test1_marks = models.FloatField(default=0, blank=True, null=True)
     test2_marks = models.FloatField(default=0, blank=True, null=True)
     UE_marks = models.FloatField(default=0, blank=True, null=True)
+    total_CA = models.FloatField(default=0, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
+
+
+
+class PredictionModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    exam = models.ForeignKey(StudentResult, on_delete=models.CASCADE, related_name="exam", null=False)
+    # student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
+    # subject_id = models.ForeignKey(Subjects, on_delete=models.CASCADE)
+    test1_marks = models.FloatField(default=0, blank=True, null=True)
+    test2_marks = models.FloatField(default=0, blank=True, null=True)
+    UE_prediction = models.FloatField(default=0, blank=True, null=True)
+    total_CA = models.FloatField(default=0, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+    def __str__(self) -> str:
+        return f"Predictions for {self.exam}"
 
 
 class StudentPerformance(models.Model):

@@ -7,8 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 
-
-from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, Attendance, AttendanceReport, LeaveReportStaff, FeedBackStaffs, StudentResult
+from student_management_app.ml_model import load_model
+from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, Attendance, AttendanceReport, LeaveReportStaff, FeedBackStaffs, StudentResult, StudentPerformance, PredictionModel
+from .helper import make_general_predictions
 
 
 def staff_home(request):
@@ -341,6 +342,7 @@ def staff_add_result_test1_save(request):
             if check_exist:
                 result = StudentResult.objects.get(subject_id=subject_obj, student_id=student_obj)
                 result.test1_marks = exam_marks
+                result.total_CA = float(result.test1_marks) + float(result.test2_marks) + float(result.UE_marks)
                 result.save()
                 messages.success(request, "Result Updated Successfully!")
                 return redirect('staff_add_result_test1')
@@ -349,8 +351,9 @@ def staff_add_result_test1_save(request):
                 result.save()
                 messages.success(request, "Result Added Successfully!")
                 return redirect('staff_add_result_test1')
-        except:
+        except Exception as e:
             messages.error(request, "Failed to Add Result!")
+            print(e)
             return redirect('staff_add_result_test1')
 
 
@@ -384,18 +387,21 @@ def staff_add_result_test2_save(request):
             if check_exist:
                 result = StudentResult.objects.get(subject_id=subject_obj, student_id=student_obj)
                 result.test2_marks = exam_marks
+                result.total_CA = float(result.test1_marks) + float(result.test2_marks) + float(result.UE_marks)
                 result.save()
+                make_general_predictions(student_obj=student_admin_id, subject_id=subject_id)
                 messages.success(request, "Result Updated Successfully!")
                 return redirect('staff_add_result_test2')
             else:
                 result = StudentResult(student_id=student_obj, subject_id=subject_obj, test2_marks=exam_marks)
                 result.save()
+                make_general_predictions(student_obj=student_admin_id, subject_id=subject_id)
                 messages.success(request, "Result Added Successfully!")
                 return redirect('staff_add_result_test2')
         except:
             messages.error(request, "Failed to Add Result!")
             return redirect('staff_add_result_test2')
-        
+
 
 # UE Functions
 
@@ -427,6 +433,7 @@ def staff_add_result_UE_save(request):
             if check_exist:
                 result = StudentResult.objects.get(subject_id=subject_obj, student_id=student_obj)
                 result.UE_marks = exam_marks
+                result.total_CA = float(result.test1_marks) + float(result.test2_marks) + float(result.UE_marks)
                 result.save()
                 messages.success(request, "Result Updated Successfully!")
                 return redirect('staff_add_result_UE')
@@ -438,3 +445,29 @@ def staff_add_result_UE_save(request):
         except:
             messages.error(request, "Failed to Add Result!")
             return redirect('staff_add_result_UE')
+        
+
+# Staff viewing results
+def staff_view_result(request):
+    student = Students.objects.get(admin=request.user.id)
+    student_result = StudentResult.objects.filter(student_id=student.id)
+
+    total = student_result[0].test1_marks + student_result[0].test2_marks + student_result[0].UE_marks
+    print(total)
+    
+
+    context = {
+        "student_result": student_result,
+        "total": total,
+    }
+    return render(request, "student_template/staff_view_result.html", context)
+
+
+# AI
+def staff_view_predictions(request):
+    obj = PredictionModel.objects.all()
+
+    context = {
+        "student_result": obj,
+    }
+    return render(request, "staff_template/staff_view_predictions.html", context)

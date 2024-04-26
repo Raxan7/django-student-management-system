@@ -1,4 +1,4 @@
-{% extends 'student_template/base_template.html' %}
+{% extends 'staff_template/base_template.html' %}
 
 {% block page_title %}
     Predictions
@@ -49,7 +49,7 @@
                                 <table class="table">
                                     <thead class="thead-light">
                                     <tr>
-                                        <th>#ID</th>
+                                        <th>Name</th>
                                         <th>Subject</th>
                                         <th>Test 1 Marks</th>
                                         <th>Test 2 Marks</th>
@@ -61,7 +61,7 @@
                                     
                                     {% for row in student_result %}
                                     <tr>
-                                        <td>{{ row.id }}</td>
+                                        <td>{{ row.exam.student_id.admin.first_name }} {{ row.exam.student_id.admin.last_name }}</td>
                                         <td>{{ row.exam.subject_id.subject_name }}</td>
                                         <td>{{ row.test1_marks }}</td>
                                         <td>{{ row.test2_marks }}</td>
@@ -69,7 +69,7 @@
                                         <td>{{ row.total_CA|floatformat }}</td>
                                         <td>
                                             {% if row.total_CA >= 40 %}
-                                                <span class="alert alert-success">Keep Working Hard</span>
+                                                <span class="alert alert-success">Keep Going! ;-)</span>
                                             {% else %}
                                                 <span class="alert alert-danger">Danger of Failing</span>
                                             {% endif %}

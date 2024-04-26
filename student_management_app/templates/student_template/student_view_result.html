@@ -42,7 +42,7 @@
                                         <td>{{ row.test2_marks }}</td>
                                         <td>{{ row.UE_marks }}</td>
                                         <td>
-                                            {% if total >= 40 %}
+                                            {% if row.total_CA >= 40 %}
                                                 <span class="alert alert-success">Pass</span>
                                             {% else %}
                                                 <span class="alert alert-danger">Fail</span>

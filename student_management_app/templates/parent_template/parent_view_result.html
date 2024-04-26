@@ -30,6 +30,7 @@
                                         <th>Test 1 Marks</th>
                                         <th>Test 2 Marks</th>
                                         <th>UE Marks</th>
+                                        <th>Total CA</th>
                                         <th>status</th>
                                     </tr>
                                     </thead>
@@ -41,8 +42,9 @@
                                         <td>{{ row.test1_marks }}</td>
                                         <td>{{ row.test2_marks }}</td>
                                         <td>{{ row.UE_marks }}</td>
+                                        <td>{{ row.total_CA }}</td>
                                         <td>
-                                            {% if total >= 40 %}
+                                            {% if row.total_CA >= 40 %}
                                                 <span class="alert alert-success">Pass</span>
                                             {% else %}
                                                 <span class="alert alert-danger">Fail</span>

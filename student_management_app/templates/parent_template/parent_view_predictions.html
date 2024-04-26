@@ -54,6 +54,7 @@
                                         <th>Test 1 Marks</th>
                                         <th>Test 2 Marks</th>
                                         <th>UE Marks</th>
+                                        <th>Total CA</th>
                                         <th>status</th>
                                     </tr>
                                     </thead>
@@ -61,13 +62,14 @@
                                     {% for row in student_result %}
                                     <tr>
                                         <td>{{ row.id }}</td>
-                                        <td>{{ row.subject_id.subject_name }}</td>
+                                        <td>{{ row.exam.subject_id.subject_name }}</td>
                                         <td>{{ row.test1_marks }}</td>
                                         <td>{{ row.test2_marks }}</td>
-                                        <td>{{ results }}</td>
+                                        <td>{{ row.UE_prediction }}</td>
+                                        <td>{{ row.total_CA|floatformat }}</td>
                                         <td>
-                                            {% if total >= 40 %}
-                                                <span class="alert alert-success">Keep Working Hard</span>
+                                            {% if row.total_CA >= 40 %}
+                                                <span class="alert alert-success">Keep Going! ;-)</span>
                                             {% else %}
                                                 <span class="alert alert-danger">Danger of Failing</span>
                                             {% endif %}
