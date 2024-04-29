@@ -93,8 +93,8 @@
             </li>
 
             <li class="nav-item">
-              {% url 'student_feedback' as student_feedback %}
-              <a href="{{ student_feedback }}" class="nav-link {% if request.path == student_feedback %} active {% endif %}">
+              {% url 'student_learn_more' as student_learn_more %}
+              <a href="{{ student_learn_more }}" class="nav-link {% if request.path == student_learn_more %} active {% endif %}">
                 <i class="nav-icon fas fa-comments"></i>
                 <p>
                   More About Yourself
