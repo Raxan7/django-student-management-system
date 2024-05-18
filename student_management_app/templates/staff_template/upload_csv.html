@@ -1,0 +1,38 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block page_title %}
+    Update Profile
+{% endblock page_title %}
+
+{% block main_content %}
+
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Update Profile</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <!-- your_template.html -->
+                    <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'staff_profile_update' %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Upload CSV</button>
+                    </form>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
