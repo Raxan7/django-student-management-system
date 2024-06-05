@@ -21,7 +21,7 @@
                     <!-- /.card-header -->
                     <!-- form start -->
                     <!-- your_template.html -->
-                    <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'staff_profile_update' %}">
+                    <form role="form" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <button type="submit">Upload CSV</button>

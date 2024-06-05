@@ -1,10 +1,12 @@
 # from channels.auth import login, logout
+import os
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from student_management_app.EmailBackEnd import EmailBackEnd
+from student_management_app.csv_imports import test1_extraction, BASE_DIR
 
 
 def home(request):
@@ -14,6 +16,8 @@ def home(request):
 
 def loginPage(request):
     print("login view here")
+    csv_file_path = os.path.join(BASE_DIR, "student_management_app/trial.csv")
+    test1_extraction(csv_file_path)
     return render(request, 'login.html')
 
 

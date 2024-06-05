@@ -93,6 +93,17 @@
             </li>
 
             <li class="nav-item">
+              {% url 'upload_csv_view' as upload_csv_view %}
+              <a href="{{ upload_csv_view }}" class="nav-link {% if request.path == upload_csv_view %} active {% endif %}">
+                <i class="nav-icon fas fa-folder"></i>
+                <p>
+                  Upload CSV
+                  {% comment %} <span class="right badge badge-danger">New</span> {% endcomment %}
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
               {% url 'staff_view_predictions' as staff_view_predictions %}
               <a href="{{ staff_view_predictions }}" class="nav-link {% if request.path == staff_view_predictions %} active {% endif %}">
                 <i class="nav-icon fas fa-calendar-alt"></i>

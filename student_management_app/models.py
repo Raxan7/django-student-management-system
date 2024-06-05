@@ -59,6 +59,9 @@ class Subjects(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
+    def __str__(self) -> str:
+        return f"{self.subject_name}"
+
 
 
 class Students(models.Model):
@@ -178,6 +181,15 @@ class StudentResult(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
+
+
+class Dummy(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    marks = models.FloatField(default=0, blank=True, null=True)
+
+    def __str__(self) -> str:
+        return f"Name of the user is {self.name} with {self.marks}"
 
 
 

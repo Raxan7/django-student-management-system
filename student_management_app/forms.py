@@ -128,3 +128,30 @@ class EditParentForm(forms.Form):
     
     gender = forms.ChoiceField(label="Gender", choices=gender_list, widget=forms.Select(attrs={"class":"form-control"}))
     profile_pic = forms.FileField(label="Profile Pic", required=False, widget=forms.FileInput(attrs={"class":"form-control"}))
+
+
+from django import forms
+from .models import Subjects
+
+class UploadCSVForm(forms.Form):
+    csv_file = forms.FileField()
+    subject = forms.ModelChoiceField(queryset=Subjects.objects.all(), required=True, label="Select Subject")
+
+    TEST_CHOICES = [
+        ('test1', 'Test 1'),
+        ('test2', 'Test 2'),
+        ('UE', 'UE'),
+    ]
+
+    test_type = forms.ChoiceField(
+        choices=TEST_CHOICES, 
+        widget=forms.RadioSelect, 
+        required=True, 
+        label="Select Test Type"
+    )
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(UploadCSVForm, self).__init__(*args, **kwargs)
+        if user is not None:
+            self.fields['subject'].queryset = Subjects.objects.filter(staff_id__id=user.id)

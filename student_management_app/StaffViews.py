@@ -471,3 +471,70 @@ def staff_view_predictions(request):
         "student_result": obj,
     }
     return render(request, "staff_template/staff_view_predictions.html", context)
+
+
+# views.py
+import csv
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .forms import UploadCSVForm
+from .models import Students, Subjects, StudentResult
+
+def upload_csv_view(request):
+    if request.method == "POST":
+        form = UploadCSVForm(request.POST, request.FILES, user=request.user)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            subject_id = request.POST.get('subject')
+            exam_type = request.POST.get('test_type')
+            print(exam_type)
+            try:
+                # Read the uploaded CSV file
+                decoded_file = csv_file.read().decode('utf-8').splitlines()
+                reader = csv.DictReader(decoded_file)
+
+                # Iterate over each row in the CSV
+                for row in reader:
+                    try:
+                        first_name, last_name = row['name'].split(' ', 1)
+                    except ValueError:
+                        first_name = row['name'].lower()
+                        last_name = ''
+                    exam_marks = row['marks']
+                    obj = get_object_or_404(Students, admin__first_name=first_name, admin__last_name=last_name)
+                    
+                    try:
+                        student_obj = obj
+                        subject_obj = Subjects.objects.get(id=subject_id)
+
+                        # Check if Students Result Already Exists or not
+                        check_exist = StudentResult.objects.filter(subject_id=subject_obj, student_id=student_obj).exists()
+                        if check_exist:
+                            result = StudentResult.objects.get(subject_id=subject_obj, student_id=student_obj)
+                            setattr(result, f"{exam_type}_marks", exam_marks)
+                            result.total_CA = float(result.test1_marks) + float(result.test2_marks) + float(result.UE_marks)
+                            result.save()
+                            if exam_type == 'test2': make_general_predictions(student_obj=student_obj.admin, subject_id=subject_id)
+
+                        else:
+                            result = StudentResult(student_id=student_obj, subject_id=subject_obj, test1_marks=exam_marks)
+                            result.save()
+                            if exam_type == 'test2': make_general_predictions(student_obj=student_obj.admin, subject_id=subject_id)
+
+
+                    except Students.DoesNotExist:
+                        messages.error(request, f"Student with names {first_name} {last_name} does not exist.")
+                    except Subjects.DoesNotExist:
+                        messages.error(request, f"Subject with ID {subject_id} does not exist.")
+
+                messages.success(request, "Results processed successfully!")
+                return redirect(f'staff_add_result_{exam_type}')
+            except Exception as e:
+                messages.error(request, f"Failed to process CSV file: {e}")
+                return redirect(f'staff_add_result_{exam_type}')
+        else:
+            messages.error(request, "Invalid form submission.")
+            return redirect(f'staff_add_result_{exam_type}')
+    else:
+        form = UploadCSVForm(user=request.user)
+    return render(request, 'staff_template/upload_csv.html', {'form': form})
