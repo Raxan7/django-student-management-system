@@ -1,6 +1,6 @@
 from django import forms 
 from django.forms import Form
-from student_management_app.models import Courses, SessionYearModel
+from student_management_app.models import Courses, SessionYearModel, Students, Subjects
 
 
 class DateInput(forms.DateInput):
@@ -92,25 +92,33 @@ class EditStudentForm(forms.Form):
     profile_pic = forms.FileField(label="Profile Pic", required=False, widget=forms.FileInput(attrs={"class":"form-control"}))
 
 
-
 class AddParentForm(forms.Form):
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(attrs={"class":"form-control"}))
-    password = forms.CharField(label="Password", max_length=50, widget=forms.PasswordInput(attrs={"class":"form-control"}))
+    password = forms.CharField(label="Password : Deafult is 12345678", max_length=50, widget=forms.PasswordInput(attrs={"class":"form-control", "value": "12345678"}))
     first_name = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     last_name = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     
-
     gender_list = (
         ('Male','Male'),
         ('Female','Female')
     )
     
-
     gender = forms.ChoiceField(label="Gender", choices=gender_list, widget=forms.Select(attrs={"class":"form-control"}))
     profile_pic = forms.FileField(label="Profile Pic", required=False, widget=forms.FileInput(attrs={"class":"form-control"}))
+    
+    student = forms.ModelChoiceField(
+        queryset=Students.objects.all(),
+        label="Select Student",
+        widget=forms.Select(attrs={"class":"form-control"})
+    )
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(AddParentForm, self).__init__(*args, **kwargs)
+        if user is not None:
+            self.fields['student'].queryset = Students.objects.filter(admin__id=user.id)
 
 
 class EditParentForm(forms.Form):
@@ -119,7 +127,6 @@ class EditParentForm(forms.Form):
     last_name = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
-
     
     gender_list = (
         ('Male','Male'),
@@ -128,10 +135,19 @@ class EditParentForm(forms.Form):
     
     gender = forms.ChoiceField(label="Gender", choices=gender_list, widget=forms.Select(attrs={"class":"form-control"}))
     profile_pic = forms.FileField(label="Profile Pic", required=False, widget=forms.FileInput(attrs={"class":"form-control"}))
+    
+    student = forms.ModelChoiceField(
+        queryset=Students.objects.all(),
+        label="Select Student",
+        widget=forms.Select(attrs={"class":"form-control"})
+    )
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(EditParentForm, self).__init__(*args, **kwargs)
+        if user is not None:
+            self.fields['student'].queryset = Students.objects.filter(admin__id=user.id)
 
-from django import forms
-from .models import Subjects
 
 class UploadCSVForm(forms.Form):
     csv_file = forms.FileField()

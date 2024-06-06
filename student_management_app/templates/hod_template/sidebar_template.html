@@ -78,6 +78,27 @@
               </a>
             </li>
 
+            {% comment %} <li class="nav-item">
+              {% url 'manage_subject' as manage_subject %}
+              {% url 'edit_subject' subject_id=id as edit_subject %}
+              <a href="{{ manage_subject }}" class="nav-link {% if request.path == manage_subject %} active {% endif %} {% if request.path == edit_subject %} active {% endif %}">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                  Manage Parent
+                </p>
+              </a>
+            </li> {% endcomment %}
+
+            <li class="nav-item">
+              {% url 'add_parent' as add_parent %}
+              <a href="{{ add_parent }}" class="nav-link {% if request.path == add_parent %} active {% endif %}">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Add Parent
+                </p>
+              </a>
+            </li>
+
             <li class="nav-item">
               {% url 'manage_course' as manage_course %}
               {% url 'edit_course' course_id=id as edit_course %}

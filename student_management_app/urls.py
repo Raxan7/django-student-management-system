@@ -58,6 +58,9 @@ urlpatterns = [
     path('admin_get_attendance_student/', HodViews.admin_get_attendance_student, name="admin_get_attendance_student"),
     path('admin_profile/', HodViews.admin_profile, name="admin_profile"),
     path('admin_profile_update/', HodViews.admin_profile_update, name="admin_profile_update"),
+
+    path('add_parent/', HodViews.add_parent, name="add_parent"),
+    path('add_parent_save/', HodViews.add_parent_save, name="add_parent_save"), 
     
 
 
@@ -100,9 +103,6 @@ urlpatterns = [
 
     path('student_view_predictions/', StudentViews.student_view_predictions, name="student_view_predictions"),
     path('student_learn_more/', StudentViews.student_learn_more, name="student_learn_more"),
-
-    path('add_parent/', StudentViews.add_parent, name="add_parent"),
-    path('add_parent_save/', StudentViews.add_parent_save, name="add_parent_save"), 
 
 
     # URLS for Parent

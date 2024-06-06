@@ -76,6 +76,9 @@ class Students(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
+    def __str__(self) -> str:
+        return f"{self.admin.first_name} {self.admin.last_name}"
+
 
 class Parents(models.Model):
     id = models.AutoField(primary_key=True)

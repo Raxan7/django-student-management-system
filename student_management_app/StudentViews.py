@@ -308,64 +308,6 @@ def student_learn_more(request):
         return render(request, 'student_template/student_learn_more.html', context)
 
 
-# Views to add parent
-def add_parent(request):
-    form = AddParentForm()
-    context = {
-        "form": form
-    }
-    return render(request, 'student_template/add_parent_template.html', context)
-
-
-
-
-def add_parent_save(request):
-    if request.method != "POST":
-        messages.error(request, "Invalid Method")
-        return redirect('add_parent')
-    else:
-        form = AddParentForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            address = form.cleaned_data['address']
-            gender = form.cleaned_data['gender']
-
-            # Getting Profile Pic first
-            # First Check whether the file is selected or not
-            # Upload only if file is selected
-            if len(request.FILES) != 0:
-                profile_pic = request.FILES['profile_pic']
-                fs = FileSystemStorage()
-                filename = fs.save(profile_pic.name, profile_pic)
-                profile_pic_url = fs.url(filename)
-            else:
-                profile_pic_url = None
-
-
-            try:
-                user = CustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name, user_type=4)
-                user.parents.address = address
-
-                user.parents.child = Students.objects.get(admin=request.user)
-
-                user.parents.gender = gender
-                user.parents.profile_pic = profile_pic_url
-                user.save()
-                messages.success(request, "Parent Added Successfully!")
-                return redirect('add_parent')
-            except Exception as e:
-                messages.error(request, "Failed to Add Parent!")
-                print(e)
-                return redirect('add_parent')
-        else:
-            return redirect('add_parent')
-
-
 @csrf_exempt
 def check_email_exist(request):
     email = request.POST.get("email")
