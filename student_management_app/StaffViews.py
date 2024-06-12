@@ -487,7 +487,7 @@ def upload_csv_view(request):
             csv_file = request.FILES['csv_file']
             subject_id = request.POST.get('subject')
             exam_type = request.POST.get('test_type')
-            print(exam_type)
+            # print(exam_type)
             try:
                 # Read the uploaded CSV file
                 decoded_file = csv_file.read().decode('utf-8').splitlines()
