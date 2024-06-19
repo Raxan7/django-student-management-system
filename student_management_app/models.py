@@ -4,13 +4,11 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-
 class SessionYearModel(models.Model):
     id = models.AutoField(primary_key=True)
     session_start_year = models.DateField()
     session_end_year = models.DateField()
     objects = models.Manager()
-
 
 
 # Overriding the Default Django Auth User and adding One More Field (user_type)
@@ -19,10 +17,9 @@ class CustomUser(AbstractUser):
     user_type = models.CharField(default=1, choices=user_type_data, max_length=10)
 
 
-
 class AdminHOD(models.Model):
     id = models.AutoField(primary_key=True)
-    admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -30,12 +27,11 @@ class AdminHOD(models.Model):
 
 class Staffs(models.Model):
     id = models.AutoField(primary_key=True)
-    admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     address = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
-
 
 
 class Courses(models.Model):
@@ -46,14 +42,13 @@ class Courses(models.Model):
     objects = models.Manager()
 
     # def __str__(self):
-	#     return self.course_name
-
+#     return self.course_name
 
 
 class Subjects(models.Model):
-    id =models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     subject_name = models.CharField(max_length=255)
-    course_id = models.ForeignKey(Courses, on_delete=models.CASCADE, default=1) #need to give default course
+    course_id = models.ForeignKey(Courses, on_delete=models.CASCADE, default=1)  #need to give default course
     staff_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -63,10 +58,9 @@ class Subjects(models.Model):
         return f"{self.subject_name}"
 
 
-
 class Students(models.Model):
     id = models.AutoField(primary_key=True)
-    admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     gender = models.CharField(max_length=50)
     profile_pic = models.FileField()
     address = models.TextField()
@@ -82,7 +76,7 @@ class Students(models.Model):
 
 class Parents(models.Model):
     id = models.AutoField(primary_key=True)
-    admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     address = models.TextField()
     child = models.OneToOneField(Students, on_delete=models.CASCADE, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -154,7 +148,6 @@ class FeedBackStaffs(models.Model):
     objects = models.Manager()
 
 
-
 class NotificationStudent(models.Model):
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
@@ -193,7 +186,6 @@ class Dummy(models.Model):
 
     def __str__(self) -> str:
         return f"Name of the user is {self.name} with {self.marks}"
-
 
 
 class PredictionModel(models.Model):
@@ -299,7 +291,6 @@ class StudentPerformance(models.Model):
         return f"Data for a {self.age}"
 
 
-
 #Creating Django Signals
 
 # It's like trigger in database. It will run only when Data is Added in CustomUser model
@@ -315,10 +306,12 @@ def create_user_profile(sender, instance, created, **kwargs):
         if instance.user_type == 2:
             Staffs.objects.create(admin=instance)
         if instance.user_type == 3:
-            Students.objects.create(admin=instance, course_id=Courses.objects.get(id=1), session_year_id=SessionYearModel.objects.get(id=1), address="", profile_pic="", gender="")
+            Students.objects.create(admin=instance, course_id=Courses.objects.get(id=1),
+                                    session_year_id=SessionYearModel.objects.get(id=1), address="", profile_pic="",
+                                    gender="")
         if instance.user_type == 4:
             Parents.objects.create(admin=instance, child_id=Students.objects.get(id=1).id, address="")
-    
+
 
 @receiver(post_save, sender=CustomUser)
 def save_user_profile(sender, instance, **kwargs):
@@ -329,4 +322,4 @@ def save_user_profile(sender, instance, **kwargs):
     if instance.user_type == 3:
         instance.students.save()
     if instance.user_type == 4:
-        instance.parents.save() 
+        instance.parents.save()

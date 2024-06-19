@@ -330,7 +330,11 @@ def staff_add_result_test1_save(request):
         return redirect('staff_add_result_test1')
     else:
         student_admin_id = request.POST.get('student_list')
-        exam_marks = request.POST.get('exam_marks')
+        if int(request.POST.get('exam_marks')) <= 20:
+            exam_marks = request.POST.get('exam_marks')
+        else:
+            messages.error(request, "The accepted marks for Test 1 is 20 maximum")
+
         subject_id = request.POST.get('subject')
 
         student_obj = Students.objects.get(admin=student_admin_id)
@@ -375,7 +379,10 @@ def staff_add_result_test2_save(request):
         return redirect('staff_add_result_test2')
     else:
         student_admin_id = request.POST.get('student_list')
-        exam_marks = request.POST.get('exam_marks')
+        if int(request.POST.get('exam_marks')) <= 20:
+            exam_marks = request.POST.get('exam_marks')
+        else:
+            messages.error(request, "The accepted marks for Test 2 is 20 maximum")
         subject_id = request.POST.get('subject')
 
         student_obj = Students.objects.get(admin=student_admin_id)
@@ -421,7 +428,10 @@ def staff_add_result_UE_save(request):
         return redirect('staff_add_result_UE')
     else:
         student_admin_id = request.POST.get('student_list')
-        exam_marks = request.POST.get('exam_marks')
+        if int(request.POST.get('exam_marks')) <= 60:
+            exam_marks = request.POST.get('exam_marks')
+        else:
+            messages.error(request, "The accepted marks for University Exams is 60 maximum")
         subject_id = request.POST.get('subject')
 
         student_obj = Students.objects.get(admin=student_admin_id)
@@ -501,6 +511,14 @@ def upload_csv_view(request):
                         first_name = row['name'].lower()
                         last_name = ''
                     exam_marks = row['marks']
+                    if int(row['marks']) <= 20 and (exam_type == 'test1' or exam_type == "test2"):
+                        exam_marks = row['marks']
+                    elif int(row['marks']) <= 60 and (exam_type == "UE"):
+                        exam_marks = row['marks']
+                    elif int(row['marks']) > 20 and (exam_type == 'test1' or exam_type == "test2"):
+                        messages.error(request, "The accepted marks for Tests is 20 maximum")
+                    elif int(row['marks']) > 60 and (exam_type == "UE"):
+                        messages.error(request, "The accepted marks for University Exams is 60 maximum")
                     obj = get_object_or_404(Students, admin__first_name=first_name, admin__last_name=last_name)
                     
                     try:
