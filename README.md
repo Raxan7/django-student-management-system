@@ -1,164 +1,115 @@
-# Django Student Management System (beta)
-This is a Simple Student Management System Developed for Educational Purpose using Python (Django).
-Feel free to make changes based on your requirements.
+# Django Student Management System
 
-[Project Demo on YouTube](https://www.youtube.com/watch?v=kArCR96m7uo "Django Student Management System Demo")
+A comprehensive Student Management System built with Django that allows efficient management of students, staff, courses, attendance, and other academic activities.
 
-I've created this project while learnging Django and followed tutorial series from **SuperCoders**
+## Features
 
-And if you like this project then ADD a STAR ⭐️  to this project 👆
+- **User Authentication**: Multi-user role-based login system (Admin, Staff, Students)
+- **Admin Dashboard**: Complete administrative control panel
+  - Manage Students and Staff (Add, Edit, View)
+  - Manage Courses and Subjects
+  - Handle Student/Staff Feedback
+  - Manage Student/Staff Leave Applications
+  - View Attendance Reports
+- **Staff Dashboard**: 
+  - Take and Update Attendance
+  - Add/View Student Results
+  - Apply for Leave
+  - Provide Feedback to Admin
+  - Send Student Notifications
+- **Student Dashboard**:
+  - View Attendance
+  - View Results/Grades
+  - Apply for Leave
+  - Provide Feedback to Admin
+  - View Notifications
 
-## Features of this Project
+## Technology Stack
 
-### A. Admin Users Can
-1. See Overall Summary Charts of Stuudents Performance, Staffs Perfomrances, Courses, Subjects, Leave, etc.
-2. Manage Staffs (Add, Update and Delete)
-3. Manage Students (Add, Update and Delete)
-4. Manage Course (Add, Update and Delete)
-5. Manage Subjects (Add, Update and Delete)
-6. Manage Sessions (Add, Update and Delete)
-7. View Student Attendance
-8. Review and Reply Student/Staff Feedback
-9. Review (Approve/Reject) Student/Staff Leave
+- **Backend**: Django (Python Web Framework)
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap
+- **Database**: SQLite (default) / MySQL / PostgreSQL
+- **Authentication**: Django Authentication System
 
-### B. Staff/Teachers Can
-1. See the Overall Summary Charts related to their students, their subjects, leave status, etc.
-2. Take/Update Students Attendance
-3. Add/Update Result
-4. Apply for Leave
-5. Send Feedback to HOD
+## Installation and Setup
 
-### C. Students Can
-1. See the Overall Summary Charts related to their attendance, their subjects, leave status, etc.
-2. View Attendance
-3. View Result
-4. Apply for Leave
-5. Send Feedback to HOD
+1. Clone the repository
+   ```bash
+   git clone https://github.com/Raxan7/django-student-management-system.git
+   cd django-student-management-system
+   ```
 
+2. Create a virtual environment and activate it
+   ```bash
+   python -m venv env
+   # On Windows
+   env\Scripts\activate
+   # On Linux/Mac
+   source env/bin/activate
+   ```
 
-## Support Developer
-1. Subscribe & Share my YouTube Channel - https://bit.ly/vijay-thapa-online-courses
-2. Add a Star 🌟  to this 👆 Repository
+3. Install dependencies
+   ```bash
+   pip install -r requirements.txt
+   ```
 
+4. Apply migrations
+   ```bash
+   python manage.py migrate
+   ```
 
-## Donate
+5. Create a superuser (Admin)
+   ```bash
+   python manage.py createsuperuser
+   ```
 
-**[PayPal](https://bit.ly/support-vijay-thapa)**
+6. Run the development server
+   ```bash
+   python manage.py runserver
+   ```
 
-**[Buy me a Coffee  ☕️](https://www.buymeacoffee.com/vijaythapa)**
+7. Access the application at `http://127.0.0.1:8000`
 
-**Donate by wire transfer:** E-Mail at *donate@vijaythapa.com* for wire transfer details. 
+## Usage
 
+### Admin Access
+- URL: `/admin/` 
+- Login with the superuser credentials created during setup
 
-## How to Install and Run this project?
+### Staff Access
+- URL: `/` (Homepage)
+- Login with staff credentials (created by admin)
 
-### Pre-Requisites:
-1. Install Git Version Control
-[ https://git-scm.com/ ]
+### Student Access
+- URL: `/` (Homepage)
+- Login with student credentials (created by admin)
 
-2. Install Python Latest Version
-[ https://www.python.org/downloads/ ]
+## Project Structure
 
-3. Install Pip (Package Manager)
-[ https://pip.pypa.io/en/stable/installing/ ]
+The project is organized into various apps with the main functionality in the `student_management_app` directory:
 
-*Alternative to Pip is Homebrew*
+- `student_management_app`: Contains the core application logic
+  - `models.py`: Defines data models like Students, Staff, Courses, etc.
+  - `views.py`: Contains the view functions/classes for different user roles
+  - `templates/`: HTML templates for rendering UI
+  - `static/`: Static files (CSS, JS, images)
 
-### Installation
-**1. Create a Folder where you want to save the project**
+## Contributing
 
-**2. Create a Virtual Environment and Activate**
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-Install Virtual Environment First
-```
-$  pip install virtualenv
-```
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Create Virtual Environment
+## License
 
-For Windows
-```
-$  python -m venv venv
-```
-For Mac
-```
-$  python3 -m venv venv
-```
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-Activate Virtual Environment
+## Acknowledgments
 
-For Windows
-```
-$  source venv/scripts/activate
-```
-
-For Mac
-```
-$  source venv/bin/activate
-```
-
-**3. Clone this project**
-```
-$  git clone https://github.com/vijaythapa333/django-student-management-system.git
-```
-
-Then, Enter the project
-```
-$  cd django-student-management-system
-```
-
-**4. Install Requirements from 'requirements.txt'**
-```python
-$  pip install -r requirements.txt
-```
-
-**5. Add the hosts**
-
-- Got to settings.py file 
-- Then, On allowed hosts, Add [‘*’]. 
-```python
-ALLOWED_HOSTS = ['*']
-```
-*No need to change on Mac.*
-
-
-**6. Now Run Server**
-
-Command for PC:
-```python
-$ python manage.py runserver
-```
-
-Command for Mac:
-```python
-$ python3 manage.py runserver
-```
-
-**7. Login Credentials**
-
-Create Super User (HOD)
-```
-$  python manage.py createsuperuser
-```
-Then Add Email, Username and Password
-
-**or Use Default Credentials**
-
-*For HOD /SuperAdmin*
-Email: admin@gmail.com
-Password: admin
-
-*For Supervisor*
-Email: staff@gmail.com
-Password: staff
-
-*For Student*
-Email: student@gmail.com
-Password: student
-
-
-
-## For Sponsor or Projects Enquiry
-1. Email - hi@vijaythapa.com
-2. LinkedIn - [vijaythapa](https://www.linkedin.com/in/vijaythapa "Vijay Thapa on LinkedIn")
-
+- Django framework documentation
+- Bootstrap for responsive UI components
+- All contributors who help improve this system
